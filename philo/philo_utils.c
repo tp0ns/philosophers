@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/08/31 16:47:47 by tpons            ###   ########.fr       */
+/*   Updated: 2021/08/31 22:39:40 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,21 @@ void	ft_putstr_fd(char* str, int fd)
 	}
 }
 
+void	free_philos(t_philo *head)
+{
+	t_philo *temp;
+	t_philo *old_temp;
+	
+	old_temp = head;
+	while (old_temp != NULL)
+	{
+		temp = old_temp;
+		old_temp = old_temp->next;
+		if (old_temp == head)
+			old_temp = NULL;
+		else	
+			free(temp);
+	}
+}
 
 //int	ft_usleep(coucou)

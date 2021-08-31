@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/08/31 16:04:26 by tpons            ###   ########.fr       */
+/*   Updated: 2021/08/31 22:53:33 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,3 +54,45 @@ int		init_params(int ac, char **av, t_params *params)
 		return (0);
 	return (1);
 }
+
+t_philo	*new_philo(t_params *p, int id)
+{
+	t_philo new_philo;
+
+	new_philo.philosopher = malloc(sizeof(pthread_t));
+	if (!new_philo.philosopher)
+		return (0);//error
+	new_philo.id = id;
+	new_philo.params = p;
+	pthread_mutex_init(new_philo.fork, NULL);
+	return (&new_philo);
+}
+
+int		init_philos(t_params *p, t_philo *head)
+{
+	int		i;
+	t_philo	*temp;
+	t_philo	*old_temp;
+
+	i = 1;
+	old_temp = head;
+	head->philosopher = malloc(sizeof(pthread_t));
+	if (!head->philosopher)
+		return (0);
+	head->id = 0;
+	head->params = p;
+	pthread_mutex_init(head->fork, NULL);
+	while (i < p->population && old_temp)
+	{
+		temp = new_philo(p, i);
+		i++;
+		if (i < p->population)
+			old_temp->next = temp;
+		else
+			old_temp->next = head;
+		old_temp = temp;
+	}
+	if (!old_temp)
+		return (0);
+	return (1);
+} //how to handle last philo ? 
