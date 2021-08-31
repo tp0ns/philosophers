@@ -1,34 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   philo_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/07 13:28:33 by tpons             #+#    #+#             */
-/*   Updated: 2021/08/31 16:47:54 by tpons            ###   ########.fr       */
+/*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
+/*   Updated: 2021/08/31 16:47:47 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		philo_routine()
+int	ft_atoi(char *str)
 {
-	;
+	int		i;
+	long	sum;
+
+	sum = 0;
+	i = -1;
+	while (str[++i])
+		sum = (sum * 10) + (str[i] - 48);
+	return (sum);
 }
 
-int		ft_error(char *str)
+void	ft_putstr_fd(char* str, int fd)
 {
-	ft_putstr_fd(str, 2);
-	return (1);
+	int i;
+
+	i = 0;
+	if (fd > 0)
+	{
+		while(str[i] && str)
+			i++;
+		write(fd, str, i);
+	}
 }
 
-int		main(int ac, char **av)
-{
-	t_params params;
 
-	if (!init_param(ac, av, &params))
-		return (ft_error("Error : Invalid arguments !\n"));
-	
-	return (0);
-}
+//int	ft_usleep(coucou)
