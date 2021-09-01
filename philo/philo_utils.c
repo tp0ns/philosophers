@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/08/31 22:39:40 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/01 12:07:18 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,29 +29,33 @@ void	ft_putstr_fd(char* str, int fd)
 	int i;
 
 	i = 0;
-	if (fd > 0)
+	if (fd > 0 && str)
 	{
-		while(str[i] && str)
+		while(str[i])
 			i++;
 		write(fd, str, i);
 	}
 }
 
+//int	ft_usleep(coucou)
+
 void	free_philos(t_philo *head)
 {
+	int 	i;
+	int		pop;
 	t_philo *temp;
 	t_philo *old_temp;
 	
+	i = 0;
+	pop = head->params->population;
 	old_temp = head;
-	while (old_temp != NULL)
+	while (i < pop) //check this
 	{
 		temp = old_temp;
 		old_temp = old_temp->next;
-		if (old_temp == head)
-			old_temp = NULL;
-		else	
-			free(temp);
+		free(temp->philosopher);
+		free(temp);
+		i++;
 	}
+	//free the last here
 }
-
-//int	ft_usleep(coucou)
