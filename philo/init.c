@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/01 11:28:22 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/03 16:51:42 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,15 +58,18 @@ int		init_params(int ac, char **av, t_params *params)
 
 t_philo	*new_philo(t_params *p, int id)
 {
-	t_philo new_philo;
+	t_philo *new_philo;
 
-	new_philo.philosopher = malloc(sizeof(pthread_t));
-	if (!new_philo.philosopher)
+	new_philo = malloc(sizeof(t_philo));
+	if (new_philo == NULL)
 		return (0);
-	new_philo.id = id + 1;
-	new_philo.params = p;
-	pthread_mutex_init(new_philo.fork, NULL);
-	return (&new_philo);
+	new_philo->philosopher = malloc(sizeof(pthread_t));
+	if (!new_philo->philosopher)
+		return (0);
+	new_philo->id = id + 1;
+	new_philo->params = p;
+	pthread_mutex_init(new_philo->fork, NULL);
+	return (new_philo);
 }
 
 int		init_philos(t_params *p, t_philo *head)
@@ -88,7 +91,7 @@ int		init_philos(t_params *p, t_philo *head)
 		old_temp = temp;
 	}
 	if (p->population == 1)
-		head->next == NULL;
+		head->next = NULL;
 	if (!old_temp)
 		return (0);
 	return (1);

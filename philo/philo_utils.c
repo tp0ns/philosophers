@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/01 12:07:18 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/03 16:18:58 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	free_philos(t_philo *head)
 	i = 0;
 	pop = head->params->population;
 	old_temp = head;
-	while (i < pop) //check this
+	while (i < pop)//check this
 	{
 		temp = old_temp;
 		old_temp = old_temp->next;
@@ -57,5 +57,42 @@ void	free_philos(t_philo *head)
 		free(temp);
 		i++;
 	}
-	//free the last here
+	//free the last here ? (no)
+}
+
+static int		num_length(long n)
+{
+	int	i;
+
+	i = 1;
+	while (n > 0)
+	{
+		n /= 10;
+		i++;
+	}
+	return (i);
+}
+
+static char		*fill_string(char *str, int n, int l)
+{
+	str[--l] = '\0';
+	while (n / 10 >= 1)
+	{
+		str[--l] = (n % 10) + '0';
+		n /= 10;
+	}
+		str[0] = (n % 10) + '0';
+	return (str);
+}
+
+char			*ft_itoa(int n)
+{
+	char	*str;
+	int		l;
+
+	l = num_length(n);
+	if (!(str = malloc(sizeof(char) * l)))
+		return (0);
+	str = fill_string(str, n, l);
+	return (str);
 }
