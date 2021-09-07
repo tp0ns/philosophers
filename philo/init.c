@@ -6,20 +6,22 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/03 16:51:42 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/07 16:49:24 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		check_args(char **av)
+int		check_args(int ac, char **av)
 {
 	int i;
 	int j;
 
 	i = 1;
 	j = 0;
-	while (av[i])
+	if (ac != 5 && ac != 6)
+		return (0);
+	while (i < ac)
 	{
 		while (av[i][j])
 		{
@@ -30,14 +32,12 @@ int		check_args(char **av)
 		j = 0;
 		i++;
 	}
-	if (i != 5 || i != 6)
-		return (0);
 	return (1);
 }
 
 int		init_params(int ac, char **av, t_params *params)
 {
-	if (check_args(av))
+	if (check_args(ac, av))
 	{
 		params->satiated = -1;
 		if (ac == 6)
@@ -46,7 +46,7 @@ int		init_params(int ac, char **av, t_params *params)
 		params->longevity = ft_atoi(av[2]);
 		params->hungry = ft_atoi(av[3]);
 		params->sleepy = ft_atoi(av[4]);
-		pthread_mutex_init(params->talking, NULL);
+		pthread_mutex_init(&params->talking, NULL);
 		if (params->population <= 0 || params->longevity <= 0 ||
 		params->hungry <= 0 || params->sleepy <= 0)
 			return (0);
@@ -56,7 +56,7 @@ int		init_params(int ac, char **av, t_params *params)
 	return (1);
 }
 
-t_philo	*new_philo(t_params *p, int id)
+t_philo	*new_philo(t_params *p, int id)//problem here
 {
 	t_philo *new_philo;
 
@@ -68,7 +68,7 @@ t_philo	*new_philo(t_params *p, int id)
 		return (0);
 	new_philo->id = id + 1;
 	new_philo->params = p;
-	pthread_mutex_init(new_philo->fork, NULL);
+	pthread_mutex_init(&new_philo->fork, NULL);
 	return (new_philo);
 }
 

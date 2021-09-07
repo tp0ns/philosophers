@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/03 16:56:38 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/07 16:09:17 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef	struct		s_params
 	/* time to sleep*/
 	int				satiated;
 	/*number of times each philosopher must eat*/
-	pthread_mutex_t	*talking;
+	pthread_mutex_t	talking;
 	/*mutex controlling philos can only talk one at a time*/
 }					t_params;
 
@@ -42,7 +42,7 @@ typedef	struct		s_philo
 	/*id of the philosopher*/
 	t_params		*params;
 	/*global params, same for all philosophers*/
-	pthread_mutex_t	*fork;
+	pthread_mutex_t	fork;
 	/*fork tab representing every fork*/
 	struct s_philo	*next;
 	/*points to the philosopher to his right*/
@@ -52,16 +52,16 @@ int					ft_atoi(char *str);
 void				ft_putstr_fd(char *str, int fd);
 
 int					init_params(int ac, char **av, t_params *params);
-int					check_args(char **av);
+int					check_args(int ac, char **av);
 
 int					init_philos(t_params *p, t_philo *head);
 t_philo				*new_philo(t_params *p, int id);
 
 void				print_routine(t_philo *philo, char *str);
-void				*philo_routine(t_philo *philo);
+void				*philo_routine(void *philo);
 int					thread(t_philo *philo);
 
 void				free_philos(t_philo *head);
-int					ft_exit(char *str);
+int					ft_error(char *str);
 
 #endif
