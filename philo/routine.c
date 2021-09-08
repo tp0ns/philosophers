@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/01 11:14:45 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/07 16:43:01 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/08 20:43:32 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,18 @@ void	*philo_routine(void *data)
 	return (0);
 }
 
-int		thread(t_philo *philo)
+int		thread(t_philo *head)
 {
 	int		i;
+	t_philo *philo;
 
 	i = 0;
-	while (i < philo->params->population)
+	philo = head;
+	while (philo && i < philo->params->population)
 	{
 		pthread_create(philo->philosopher, NULL, philo_routine, philo);
 		philo = philo->next;
 		i++;
 	}
-		return (0);
 	return (1);
 }

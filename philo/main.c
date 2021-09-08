@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:28:33 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/03 16:24:32 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/08 20:40:24 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,22 @@ int		ft_error(char *str)
 
 int		main(int ac, char **av)
 {
-	t_params	params;
-	t_philo		philo;
+	t_params	*params;
+	t_philo		*philo;
 
-	if (!init_params(ac, av, &params))
+	params = init_params(ac, av);
+	if (!params)
 		return (ft_error("Error : Invalid arguments !\n"));
-	if (!init_philos(&params, &philo))
-		return (ft_error("Error : Problem occured when starting threads !\n"));
-	if (!thread(&philo))
+	philo = init_philos(params);
+	if (!philo)
 	{
-		free_philos(&philo);
+		free(params);
+		return (ft_error("Error : Problem occured when starting threads !\n"));
+	}
+	if (!thread(philo))
+	{
+		free_philos(philo);
+		free(params);
 		return (ft_error("Error : !\n"));
 	}
 

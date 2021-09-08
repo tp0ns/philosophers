@@ -6,13 +6,13 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/07 16:49:24 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/08 20:28:15 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		check_args(int ac, char **av)
+int			check_args(int ac, char **av)
 {
 	int i;
 	int j;
@@ -35,8 +35,13 @@ int		check_args(int ac, char **av)
 	return (1);
 }
 
-int		init_params(int ac, char **av, t_params *params)
+t_params	*init_params(int ac, char **av)
 {
+	t_params *params;
+
+	params = malloc(sizeof(t_params));
+	if (!params)
+		return (0);
 	if (check_args(ac, av))
 	{
 		params->satiated = -1;
@@ -53,10 +58,10 @@ int		init_params(int ac, char **av, t_params *params)
 	}
 	else 
 		return (0);
-	return (1);
+	return (params);
 }
 
-t_philo	*new_philo(t_params *p, int id)//problem here
+t_philo		*new_philo(t_params *p, int id)//problem here
 {
 	t_philo *new_philo;
 
@@ -72,16 +77,17 @@ t_philo	*new_philo(t_params *p, int id)//problem here
 	return (new_philo);
 }
 
-int		init_philos(t_params *p, t_philo *head)
+t_philo		*init_philos(t_params *p)
 {
 	int		i;
+	t_philo	*head;
 	t_philo	*temp;
 	t_philo	*old_temp;
 
 	i = 1;
 	head = new_philo(p, 0);
 	old_temp = head;
-	while (i < p->population && old_temp)
+	while (i < head->params->population && old_temp)
 	{
 		temp = new_philo(p, i);
 		i++;
@@ -90,9 +96,9 @@ int		init_philos(t_params *p, t_philo *head)
 			temp->next = head;
 		old_temp = temp;
 	}
-	if (p->population == 1)
+	if (head->params->population == 1)
 		head->next = NULL;
 	if (!old_temp)
 		return (0);
-	return (1);
+	return (head);
 }
