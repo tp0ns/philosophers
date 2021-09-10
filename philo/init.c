@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/08 20:28:15 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/10 17:35:02 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,13 @@ t_params	*init_params(int ac, char **av)
 		if (ac == 6)
 			params->satiated = ft_atoi(av[5]);
 		params->population = ft_atoi(av[1]);
-		params->longevity = ft_atoi(av[2]);
-		params->hungry = ft_atoi(av[3]);
-		params->sleepy = ft_atoi(av[4]);
-		pthread_mutex_init(&params->talking, NULL);
-		if (params->population <= 0 || params->longevity <= 0 ||
-		params->hungry <= 0 || params->sleepy <= 0)
+		params->t_die = ft_atoi(av[2]);
+		params->t_eat = ft_atoi(av[3]);
+		params->t_sleep = ft_atoi(av[4]);
+		if (pthread_mutex_init(&params->talking, NULL))
+			return (0);
+		if (params->population <= 0 || params->t_die <= 0 ||
+		params->t_eat <= 0 || params->t_sleep <= 0)
 			return (0);
 	}
 	else 
@@ -73,7 +74,8 @@ t_philo		*new_philo(t_params *p, int id)//problem here
 		return (0);
 	new_philo->id = id + 1;
 	new_philo->params = p;
-	pthread_mutex_init(&new_philo->fork, NULL);
+	if (pthread_mutex_init(&new_philo->fork, NULL))
+		return (0);
 	return (new_philo);
 }
 
@@ -87,16 +89,16 @@ t_philo		*init_philos(t_params *p)
 	i = 1;
 	head = new_philo(p, 0);
 	old_temp = head;
-	while (i < head->params->population && old_temp)
+	while (i < p->population && old_temp)
 	{
 		temp = new_philo(p, i);
 		i++;
 		old_temp->next = temp;
-		if (i >= p->population)
+		if (i == p->population)
 			temp->next = head;
 		old_temp = temp;
 	}
-	if (head->params->population == 1)
+	if (p->population == 1)
 		head->next = NULL;
 	if (!old_temp)
 		return (0);

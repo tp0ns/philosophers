@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/08 20:25:41 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/10 16:36:46 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ typedef	struct		s_params
 {
 	int				population;
 	/*number of philosophers*/
-	int				longevity;
+	int				t_die;
 	/*time to die*/
-	int				hungry;
+	int				t_eat;
 	/*time to eat*/
-	int				sleepy;
+	int				t_sleep;
 	/* time to sleep*/
 	int				satiated;
 	/*number of times each philosopher must eat*/
@@ -50,6 +50,8 @@ typedef	struct		s_philo
 
 int					ft_atoi(char *str);
 void				ft_putstr_fd(char *str, int fd);
+long int			present(void);
+void				ft_usleep(long int time_ms);
 
 t_params			*init_params(int ac, char **av);
 int					check_args(int ac, char **av);

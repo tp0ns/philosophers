@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:28:33 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/08 20:40:24 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/10 17:54:24 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ int		main(int ac, char **av)
 	{
 		free_philos(philo);
 		free(params);
-		return (ft_error("Error : !\n"));
+		return (ft_error("Error : Can't initialize thread\n"));
 	}
-
+	free_philos(philo);
+	free(params);
 	return (0);
 }
