@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/10 16:31:06 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/10 18:29:43 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	free_philos(t_philo *head)
 	{
 		temp = old_temp;
 		old_temp = old_temp->next;
-		free(temp->philosopher);
+		pthread_join(temp->philosopher, NULL);
 		free(temp);
 		i++;
 	}

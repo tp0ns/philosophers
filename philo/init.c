@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/10 17:35:02 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/10 18:00:07 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ t_philo		*new_philo(t_params *p, int id)//problem here
 	new_philo = malloc(sizeof(t_philo));
 	if (new_philo == NULL)
 		return (0);
-	new_philo->philosopher = malloc(sizeof(pthread_t));
-	if (!new_philo->philosopher)
-		return (0);
+	// new_philo->philosopher = malloc(sizeof(pthread_t));
+	// if (!new_philo->philosopher)
+	// 	return (0);
 	new_philo->id = id + 1;
 	new_philo->params = p;
 	if (pthread_mutex_init(&new_philo->fork, NULL))

@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/10 16:36:46 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/10 18:01:28 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef	struct		s_params
 
 typedef	struct		s_philo
 {
-	pthread_t		*philosopher;
+	pthread_t		philosopher;
 	/*thread representing the philosopher*/
 	int				id;
 	/*id of the philosopher*/
