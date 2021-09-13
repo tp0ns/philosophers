@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/10 18:01:28 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/13 23:31:37 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,46 @@
 
 typedef	struct		s_params
 {
-	int				population;
 	/*number of philosophers*/
-	int				t_die;
+	long int		population;
 	/*time to die*/
-	int				t_eat;
+	long int		t_die;
 	/*time to eat*/
-	int				t_sleep;
+	long int		t_eat;
 	/* time to sleep*/
-	int				satiated;
+	long int		t_sleep;
 	/*number of times each philosopher must eat*/
-	pthread_mutex_t	talking;
+	int				t_meat;
+	/*Flag up when all philosophers are satiated*/
+	int				satiated;
 	/*mutex controlling philos can only talk one at a time*/
+	pthread_mutex_t	talking;
+	/*Indicate time of first meal*/
+	long int		start;
+	/*Flag up when a philosopher is dead*/
+	int				dead;
 }					t_params;
 
 typedef	struct		s_philo
 {
-	pthread_t		philosopher;
 	/*thread representing the philosopher*/
-	int				id;
+	pthread_t		philosopher;
 	/*id of the philosopher*/
-	t_params		*params;
+	int				id;
 	/*global params, same for all philosophers*/
-	pthread_mutex_t	fork;
+	t_params		*params;
+	/*Flag up when philosopher is eating*/
+	int				eating;
+	/*represent the number of meal the philosopher had*/
+	int				meals;
+	/*indicates that  (meals > params->t_meat)*/
+	int				full;
+	/*Hour of last meal*/
+	long int		last_meal;
 	/*fork tab representing every fork*/
-	struct s_philo	*next;
+	pthread_mutex_t	fork;
 	/*points to the philosopher to his right*/
+	struct s_philo	*next;
 }					t_philo;
 
 int					ft_atoi(char *str);
@@ -59,10 +73,13 @@ int					check_args(int ac, char **av);
 t_philo				*init_philos(t_params *p);
 t_philo				*new_philo(t_params *p, int id);
 
-void				print_routine(t_philo *philo, char *str);
-void				*philo_routine(void *philo);
+void				philo_talks(t_philo *philo, char *str);
+void				philo_routine(t_philo *philo);
+void				*philo_launch(void *philo);
 int					thread(t_philo *philo);
 
+void				*are_philos_alive(void *philo);
+void				*are_philos_hungry(void *philo);
 void				free_philos(t_philo *head);
 int					ft_error(char *str);
 
