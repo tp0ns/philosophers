@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/13 22:54:53 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/14 20:08:13 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ t_params	*init_params(int ac, char **av)
 		params->t_die = ft_atoi(av[2]);
 		params->t_eat = ft_atoi(av[3]);
 		params->t_sleep = ft_atoi(av[4]);
-		params->dead = 0;
 		params->satiated = 0;
+		params->dead = 0;
 		if (pthread_mutex_init(&params->talking, NULL))
 			return (0);
-		if (params->population <= 0 || params->t_die <= 0 ||
-		params->t_eat <= 0 || params->t_sleep <= 0)
+		if (params->population <= 0 || params->population > 200 ||
+			params->t_die <= 60 || params->t_eat <= 60 || params->t_sleep <= 60)
 			return (0);
 	}
 	else 
@@ -73,17 +73,15 @@ t_philo		*new_philo(t_params *p, int id)//problem here
 		return (0);
 	new_philo->id = id + 1;
 	new_philo->params = p;
-	if (pthread_mutex_init(&new_philo->fork, NULL))
-		return (0);
-	new_philo->eating = 0;
 	new_philo->meals = 0;
 	new_philo->full = 0;
 	new_philo->last_meal = present();
+	if (pthread_mutex_init(&new_philo->fork, NULL))
+		return (0);
+	if (pthread_mutex_init(&new_philo->eating, NULL))
+		return (0);
 	return (new_philo);
 }
-// new_philo->philosopher = malloc(sizeof(pthread_t));
-// if (!new_philo->philosopher)
-// 	return (0);
 
 t_philo		*init_philos(t_params *p)
 {

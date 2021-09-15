@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:28:33 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/10 18:13:48 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/15 16:45:01 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,16 @@ int		main(int ac, char **av)
 	if (!philo)
 	{
 		free(params);
-		//mutex destroy
+		pthread_mutex_destroy(&params->talking);
 		return (ft_error("Error : Problem occured when starting threads !\n"));
 	}
 	if (!thread(philo))
 	{
 		free_philos(philo);
 		free(params);
-		//mutex destroy
 		return (ft_error("Error : Can't initialize thread\n"));
 	}
 	free_philos(philo);
-	// mutex destroy
 	free(params);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/13 23:31:37 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/15 16:22:35 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,15 @@ typedef	struct		s_philo
 	int				id;
 	/*global params, same for all philosophers*/
 	t_params		*params;
-	/*Flag up when philosopher is eating*/
-	int				eating;
 	/*represent the number of meal the philosopher had*/
 	int				meals;
 	/*indicates that  (meals > params->t_meat)*/
 	int				full;
 	/*Hour of last meal*/
 	long int		last_meal;
-	/*fork tab representing every fork*/
+	/*Mutex when philosopher is eating*/
+	pthread_mutex_t	eating;
+	/*Mutex representing fork*/
 	pthread_mutex_t	fork;
 	/*points to the philosopher to his right*/
 	struct s_philo	*next;
@@ -78,9 +78,10 @@ void				philo_routine(t_philo *philo);
 void				*philo_launch(void *philo);
 int					thread(t_philo *philo);
 
-void				*are_philos_alive(void *philo);
-void				*are_philos_hungry(void *philo);
+void				are_philos_alive(t_philo *philo);
+void				*should_philos_run(void *philo);
 void				free_philos(t_philo *head);
+
 int					ft_error(char *str);
 
 #endif
