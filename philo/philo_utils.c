@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/16 16:38:17 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/19 16:29:38 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void	*should_philos_run(void *data)
 		if (philo->params->dead)
 			break ;
 		i = 0;
-		while (philo->params->t_meat >= 0 && i < philo->params->population
+		while (philo->params->t_meat >= 0 && i++ < philo->params->population
 		&& philo->full)
-			i++;
+			philo = philo->next;
 		if (i >= philo->params->population)
 		{
 			philo->params->satiated = 1;
@@ -68,8 +68,9 @@ void	free_philos(t_philo *head)
 	while (i < pop)
 	{
 		temp = old_temp;
-		old_temp = old_temp->next;
-		pthread_join(temp->philosopher, NULL);
+			old_temp = old_temp->next;
+		if (temp->next != NULL)
+			pthread_join(temp->philosopher, NULL);
 		pthread_mutex_destroy(&temp->fork);
 		pthread_mutex_destroy(&temp->eating);
 		free(temp);

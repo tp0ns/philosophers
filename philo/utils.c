@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 15:56:29 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/13 22:27:09 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/19 15:25:07 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,11 @@ void		ft_putstr_fd(char* str, int fd)
 
 long int	present(void)
 {
-	long int			time;
 	struct timeval		actual_time;
 
-	time = 0;
 	if (gettimeofday(&actual_time, NULL) == -1)
 		ft_error("Coudn't retrieve time of the day\n");
-	time = (actual_time.tv_sec * 1000) + (actual_time.tv_usec / 1000);
-	return (time);
+	return ((actual_time.tv_sec * 1000) + (actual_time.tv_usec / 1000));
 }
 
 void	ft_usleep(long int time_ms)
@@ -56,5 +53,5 @@ void	ft_usleep(long int time_ms)
 	start = 0;
 	start = present();
 	while ((present() - start) < time_ms)
-		usleep(time_ms / 10);
+		usleep(time_ms / 6);
 }
