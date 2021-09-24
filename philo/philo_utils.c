@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/19 16:29:38 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/23 19:21:31 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,15 @@ void	are_philos_alive(t_philo *philo)
 	i = 0;
 	while ((i++ < philo->params->population) && !(philo->params->dead))
 	{
-		pthread_mutex_lock(&philo->eating);
-		if ((present() - philo->last_meal) > philo->params->t_die)
+		// pthread_mutex_lock(&philo->eating);
+		if (!philo->eating && ((present() - philo->last_meal) > philo->params->t_die))
 		{	
 			philo->params->dead = 1;
-			philo_talks(philo, "is dead");
+			pthread_mutex_lock(&philo->params->talking);	
+			printf("%-5ld | Philo %d %s.\n", (present() - philo->params->start), philo->id, "is dead");
+			pthread_mutex_unlock(&philo->params->talking);
 		}
-		pthread_mutex_unlock(&philo->eating);
+		// pthread_mutex_unlock(&philo->eating);
 		philo = philo->next;
 	}
 }
@@ -72,7 +74,7 @@ void	free_philos(t_philo *head)
 		if (temp->next != NULL)
 			pthread_join(temp->philosopher, NULL);
 		pthread_mutex_destroy(&temp->fork);
-		pthread_mutex_destroy(&temp->eating);
+		// pthread_mutex_destroy(&temp->eating);
 		free(temp);
 		i++;
 	}

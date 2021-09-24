@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/15 16:22:35 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/23 19:18:46 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef	struct		s_philo
 	/*Hour of last meal*/
 	long int		last_meal;
 	/*Mutex when philosopher is eating*/
-	pthread_mutex_t	eating;
+	int				eating;
 	/*Mutex representing fork*/
 	pthread_mutex_t	fork;
 	/*points to the philosopher to his right*/
@@ -74,6 +74,7 @@ t_philo				*init_philos(t_params *p);
 t_philo				*new_philo(t_params *p, int id);
 
 void				philo_talks(t_philo *philo, char *str);
+void				philo_eats(t_philo *philo);
 void				philo_routine(t_philo *philo);
 void				*philo_launch(void *philo);
 int					thread(t_philo *philo);

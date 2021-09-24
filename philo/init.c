@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/14 20:08:13 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/23 19:20:07 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,9 @@ t_philo		*new_philo(t_params *p, int id)//problem here
 	new_philo->last_meal = present();
 	if (pthread_mutex_init(&new_philo->fork, NULL))
 		return (0);
-	if (pthread_mutex_init(&new_philo->eating, NULL))
-		return (0);
+	new_philo->eating = 0;
+	// if (pthread_mutex_init(&new_philo->eating, NULL))
+	// 	return (0);
 	return (new_philo);
 }
 

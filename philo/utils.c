@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 15:56:29 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/19 15:25:07 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/23 19:18:13 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,5 @@ void	ft_usleep(long int time_ms)
 	start = 0;
 	start = present();
 	while ((present() - start) < time_ms)
-		usleep(time_ms / 6);
+		usleep(1);
 }
