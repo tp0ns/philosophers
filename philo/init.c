@@ -6,16 +6,16 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/23 19:20:07 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/28 21:43:37 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int			check_args(int ac, char **av)
+int	check_args(int ac, char **av)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 1;
 	j = 0;
@@ -37,7 +37,7 @@ int			check_args(int ac, char **av)
 
 t_params	*init_params(int ac, char **av)
 {
-	t_params *params;
+	t_params	*params;
 
 	params = malloc(sizeof(t_params));
 	if (!params)
@@ -55,18 +55,18 @@ t_params	*init_params(int ac, char **av)
 		params->dead = 0;
 		if (pthread_mutex_init(&params->talking, NULL))
 			return (0);
-		if (params->population <= 0 || params->population > 200 ||
-			params->t_die <= 60 || params->t_eat <= 60 || params->t_sleep <= 60)
+		if (params->population <= 0 || params->population > 200 || params->t_die
+			<= 60 || params->t_eat <= 60 || params->t_sleep <= 60)
 			return (0);
 	}
-	else 
+	else
 		return (0);
 	return (params);
 }
 
-t_philo		*new_philo(t_params *p, int id)//problem here
+t_philo	*new_philo(t_params *p, int id)
 {
-	t_philo *new_philo;
+	t_philo	*new_philo;
 
 	new_philo = malloc(sizeof(t_philo));
 	if (new_philo == NULL)
@@ -79,12 +79,11 @@ t_philo		*new_philo(t_params *p, int id)//problem here
 	if (pthread_mutex_init(&new_philo->fork, NULL))
 		return (0);
 	new_philo->eating = 0;
-	// if (pthread_mutex_init(&new_philo->eating, NULL))
-	// 	return (0);
+	new_philo->next = NULL;
 	return (new_philo);
 }
 
-t_philo		*init_philos(t_params *p)
+t_philo	*init_philos(t_params *p)
 {
 	int		i;
 	t_philo	*head;
@@ -103,8 +102,6 @@ t_philo		*init_philos(t_params *p)
 			temp->next = head;
 		old_temp = temp;
 	}
-	if (p->population == 1)
-		head->next = NULL;
 	if (!old_temp)
 		return (0);
 	return (head);

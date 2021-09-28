@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/23 19:18:46 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/28 22:42:34 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,47 +18,57 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-typedef	struct		s_params
+/*
+**    --Parameters structure--
+**
+** population : number of philosophers.
+** t_die : time it takes for a philosopher to die.
+** t_eat : time it takes for a philosopher to eat.
+** t_sleep : time it takes for a philosopher to sleep.
+** t_meat : minimum number of time a philosopher must eat.
+** satiated : Flag up when all philosophers are satiated.
+** talking : mutex controlling philos can only talk one at a time.
+** start : Indicate time of first meal.
+** dead : Flag up when a philosopher is dead.
+*/
+
+typedef struct s_params
 {
-	/*number of philosophers*/
 	long int		population;
-	/*time to die*/
 	long int		t_die;
-	/*time to eat*/
 	long int		t_eat;
-	/* time to sleep*/
 	long int		t_sleep;
-	/*number of times each philosopher must eat*/
 	int				t_meat;
-	/*Flag up when all philosophers are satiated*/
 	int				satiated;
-	/*mutex controlling philos can only talk one at a time*/
 	pthread_mutex_t	talking;
-	/*Indicate time of first meal*/
 	long int		start;
-	/*Flag up when a philosopher is dead*/
 	int				dead;
 }					t_params;
 
-typedef	struct		s_philo
+/*
+**	--Philosophers linked list--
+**
+** philosopher : thread representing the philosopher. 
+** id : id of the philosopher. 
+** params : global params, same for all philosophers. 
+** meals : represent the number of meal the philosopher had. 
+** full : flag up if (meals > params->t_meat). 
+** last_meal : Hour of last meal. 
+** eating : Mutex when philosopher is eating. 
+** fork : Mutex representing fork. 
+** next : points to the philosopher to his right. 
+*/
+
+typedef struct s_philo
 {
-	/*thread representing the philosopher*/
 	pthread_t		philosopher;
-	/*id of the philosopher*/
 	int				id;
-	/*global params, same for all philosophers*/
 	t_params		*params;
-	/*represent the number of meal the philosopher had*/
 	int				meals;
-	/*indicates that  (meals > params->t_meat)*/
 	int				full;
-	/*Hour of last meal*/
 	long int		last_meal;
-	/*Mutex when philosopher is eating*/
 	int				eating;
-	/*Mutex representing fork*/
 	pthread_mutex_t	fork;
-	/*points to the philosopher to his right*/
 	struct s_philo	*next;
 }					t_philo;
 
@@ -79,6 +89,7 @@ void				philo_routine(t_philo *philo);
 void				*philo_launch(void *philo);
 int					thread(t_philo *philo);
 
+void				philo_is_alone(t_philo *philo);
 void				are_philos_alive(t_philo *philo);
 void				*should_philos_run(void *philo);
 void				free_philos(t_philo *head);

@@ -6,13 +6,13 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 15:56:29 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/23 19:18:13 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/28 21:45:57 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int			ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
 	int		i;
 	long	sum;
@@ -24,14 +24,14 @@ int			ft_atoi(char *str)
 	return (sum);
 }
 
-void		ft_putstr_fd(char* str, int fd)
+void	ft_putstr_fd(char *str, int fd)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (fd > 0 && str)
 	{
-		while(str[i])
+		while (str[i])
 			i++;
 		write(fd, str, i);
 	}

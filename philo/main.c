@@ -6,19 +6,19 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:28:33 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/15 16:45:01 by tpons            ###   ########.fr       */
+/*   Updated: 2021/09/28 21:26:15 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		ft_error(char *str)
+int	ft_error(char *str)
 {
 	ft_putstr_fd(str, 2);
 	return (1);
 }
 
-int		main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_params	*params;
 	t_philo		*philo;
