@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/01 11:14:45 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/28 22:59:19 by tpons            ###   ########.fr       */
+/*   Updated: 2021/10/05 14:52:00 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	philo_eats(t_philo *philo)
 	philo_talks(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->next->fork);
 	philo_talks(philo, "has taken a fork");
-	philo->eating = 1;
+	pthread_mutex_lock(&philo->eating);
 	philo_talks(philo, "is eating");
 	philo->last_meal = present();
 	if (!philo->params->dead || !philo->params->satiated)
 	{
 		ft_usleep(philo->params->t_eat);
-		philo->eating = 0;
+		pthread_mutex_unlock(&philo->eating);
 		philo->meals++;
 		if (philo->params->t_meat >= 0
 			&& (philo->meals >= philo->params->t_meat))

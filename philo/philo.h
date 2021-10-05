@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/28 22:42:34 by tpons            ###   ########.fr       */
+/*   Updated: 2021/10/05 14:46:22 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ typedef struct s_philo
 	int				meals;
 	int				full;
 	long int		last_meal;
-	int				eating;
+	pthread_mutex_t	eating;
 	pthread_mutex_t	fork;
 	struct s_philo	*next;
 }					t_philo;
