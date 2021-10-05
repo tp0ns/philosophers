@@ -72,20 +72,26 @@ void	free_philos(t_philo *head)
 	int		i;
 	int		pop;
 	t_philo	*temp;
-	t_philo	*old_temp;
+	t_philo	*next_temp;
 
 	i = 0;
 	pop = head->params->population;
-	old_temp = head;
+	temp = head;
 	while (i < pop)
 	{
-		temp = old_temp;
-		old_temp = old_temp->next;
-		if (temp->next != NULL)
-			pthread_join(temp->philosopher, NULL);
+		pthread_join(temp->philosopher, NULL);
+		temp = temp->next;
+		i++;
+	}
+	i = 0;
+	temp = head;
+	while (i < pop)
+	{
+		next_temp = temp->next;
 		pthread_mutex_destroy(&temp->fork);
 		pthread_mutex_destroy(&temp->eating);
 		free(temp);
+		temp = next_temp;
 		i++;
 	}
 }
