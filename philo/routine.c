@@ -32,15 +32,15 @@ void	philo_eats(t_philo *philo)
 	pthread_mutex_lock(&philo->eating);
 	philo_talks(philo, "is eating");
 	philo->last_meal = present();
-	if (!philo->params->dead || !philo->params->satiated)
+	if (!philo->params->dead && !philo->params->satiated)
 	{
 		ft_usleep(philo->params->t_eat);
-		pthread_mutex_unlock(&philo->eating);
 		philo->meals++;
 		if (philo->params->t_meat >= 0
 			&& (philo->meals >= philo->params->t_meat))
 			philo->full = 1;
 	}
+	pthread_mutex_unlock(&philo->eating);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->next->fork);
 }
@@ -91,8 +91,7 @@ int	thread(t_philo *head)
 			if (pthread_create(&(philo->philosopher), NULL, philo_launch, philo)
 				!= 0)
 				return (0);
-			if (philo->params->population != 1)
-				philo = philo->next;
+			philo = philo->next;
 		}
 		pthread_join(alive_check, NULL);
 	}
