@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/10/05 14:50:25 by tpons            ###   ########.fr       */
+/*   Updated: 2021/10/06 17:02:20 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,21 +99,19 @@ void	free_philos(t_philo *head)
 	i = 0;
 	pop = head->params->population;
 	temp = head;
-	while (i < pop)
+	while ((pop > 1) && (i++ < pop))
 	{
 		pthread_join(temp->philosopher, NULL);
 		temp = temp->next;
-		i++;
 	}
 	i = 0;
 	temp = head;
-	while (i < pop)
+	while (i++ < pop)
 	{
 		next_temp = temp->next;
 		pthread_mutex_destroy(&temp->fork);
 		pthread_mutex_destroy(&temp->eating);
 		free(temp);
 		temp = next_temp;
-		i++;
 	}
 }
