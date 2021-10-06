@@ -67,6 +67,28 @@ void	*should_philos_run(void *data)
 	return (NULL);
 }
 
+void	free_init_philos(t_philo *head)
+{
+	t_philo	*philo;
+	t_philo	*next_philo;
+
+	if (head == NULL)
+		return ;
+	philo = head;
+	next_philo = philo->next;
+	while (next_philo != NULL)
+	{
+		pthread_mutex_destroy(&philo->eating);
+		pthread_mutex_destroy(&philo->fork);
+		free(philo);
+		philo = next_philo;
+		next_philo = philo->next;
+	}
+	pthread_mutex_destroy(&philo->eating);
+	pthread_mutex_destroy(&philo->fork);
+	free(philo);
+}
+
 void	free_philos(t_philo *head)
 {
 	int		i;

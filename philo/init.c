@@ -35,6 +35,23 @@ int	check_args(int ac, char **av)
 	return (1);
 }
 
+int	from_args_to_params(t_params *params, int ac, char **av)
+{
+	params->t_meat = -1;
+	if (ac == 6)
+		params->t_meat = ft_atoi(av[5]);
+	params->population = ft_atoi(av[1]);
+	params->t_die = ft_atoi(av[2]);
+	params->t_eat = ft_atoi(av[3]);
+	params->t_sleep = ft_atoi(av[4]);
+	params->satiated = 0;
+	params->dead = 0;
+	if (params->population <= 0 || params->population > 200 || params->t_die
+		<= 60 || params->t_eat <= 60 || params->t_sleep <= 60)
+		return (1);
+	return (0);
+}
+
 t_params	*init_params(int ac, char **av)
 {
 	t_params	*params;
@@ -44,23 +61,18 @@ t_params	*init_params(int ac, char **av)
 		return (0);
 	if (check_args(ac, av))
 	{
-		params->t_meat = -1;
-		if (ac == 6)
-			params->t_meat = ft_atoi(av[5]);
-		params->population = ft_atoi(av[1]);
-		params->t_die = ft_atoi(av[2]);
-		params->t_eat = ft_atoi(av[3]);
-		params->t_sleep = ft_atoi(av[4]);
-		params->satiated = 0;
-		params->dead = 0;
-		if (pthread_mutex_init(&params->talking, NULL))
+		if (from_args_to_params(params, ac, av)
+			|| pthread_mutex_init(&params->talking, NULL))
+		{
+			free(params);
 			return (0);
-		if (params->population <= 0 || params->population > 200 || params->t_die
-			<= 60 || params->t_eat <= 60 || params->t_sleep <= 60)
-			return (0);
+		}
 	}
 	else
+	{
+		free(params);
 		return (0);
+	}
 	return (params);
 }
 
@@ -77,9 +89,16 @@ t_philo	*new_philo(t_params *p, int id)
 	new_philo->full = 0;
 	new_philo->last_meal = present();
 	if (pthread_mutex_init(&new_philo->fork, NULL))
+	{
+		free(new_philo);
 		return (0);
+	}
 	if (pthread_mutex_init(&new_philo->eating, NULL))
+	{
+		pthread_mutex_destroy(&new_philo->fork);
+		free(new_philo);
 		return (0);
+	}
 	new_philo->next = NULL;
 	return (new_philo);
 }
@@ -99,11 +118,16 @@ t_philo	*init_philos(t_params *p)
 		temp = new_philo(p, i);
 		i++;
 		old_temp->next = temp;
+		old_temp = temp;
+		if (!old_temp)
+			break ;
 		if (i == p->population)
 			temp->next = head;
-		old_temp = temp;
 	}
 	if (!old_temp)
+	{
+		free_init_philos(head);
 		return (0);
+	}
 	return (head);
 }

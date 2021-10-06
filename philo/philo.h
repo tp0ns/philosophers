@@ -34,7 +34,7 @@
 
 typedef struct s_params
 {
-	long int		population;
+	int				population;
 	long int		t_die;
 	long int		t_eat;
 	long int		t_sleep;
@@ -79,6 +79,7 @@ void				ft_usleep(long int time_ms);
 
 t_params			*init_params(int ac, char **av);
 int					check_args(int ac, char **av);
+int					from_args_to_params(t_params *params, int ac, char **av);
 
 t_philo				*init_philos(t_params *p);
 t_philo				*new_philo(t_params *p, int id);
@@ -92,6 +93,7 @@ int					thread(t_philo *philo);
 void				philo_is_alone(t_philo *philo);
 void				are_philos_alive(t_philo *philo);
 void				*should_philos_run(void *philo);
+void				free_init_philos(t_philo *head);
 void				free_philos(t_philo *head);
 
 int					ft_error(char *str);

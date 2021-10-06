@@ -29,17 +29,19 @@ int	main(int ac, char **av)
 	philo = init_philos(params);
 	if (!philo)
 	{
-		free(params);
 		pthread_mutex_destroy(&params->talking);
+		free(params);
 		return (ft_error("Error : Problem occured when starting threads !\n"));
 	}
 	if (!thread(philo))
 	{
 		free_philos(philo);
+		pthread_mutex_destroy(&params->talking);
 		free(params);
 		return (ft_error("Error : Can't initialize thread\n"));
 	}
 	free_philos(philo);
+	pthread_mutex_destroy(&params->talking);
 	free(params);
 	return (0);
 }
