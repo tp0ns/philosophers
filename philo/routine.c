@@ -17,7 +17,7 @@ void	philo_talks(t_philo *philo, char *str)
 	if (!philo->params->dead && !philo->params->satiated)
 	{
 		pthread_mutex_lock(&philo->params->talking);
-		printf("%-5ld | Philo %d %s.\n", (present() - philo->params->start),
+		printf("%ld %d %s\n", (present() - philo->params->start),
 			philo->id, str);
 		pthread_mutex_unlock(&philo->params->talking);
 	}

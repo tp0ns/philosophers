@@ -33,8 +33,8 @@ void	are_philos_alive(t_philo *philo)
 		{
 			philo->params->dead = 1;
 			pthread_mutex_lock(&philo->params->talking);
-			printf("%-5ld | Philo %d %s.\n", (present() - philo->params->start),
-				philo->id, "is dead");
+			printf("%ld %d %s.\n", (present() - philo->params->start),
+				philo->id, "died");
 			pthread_mutex_unlock(&philo->params->talking);
 		}
 		pthread_mutex_unlock(&philo->eating);
