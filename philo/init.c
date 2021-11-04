@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 13:38:58 by tpons             #+#    #+#             */
-/*   Updated: 2021/10/05 14:46:53 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/04 15:07:36 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,14 @@ int	from_args_to_params(t_params *params, int ac, char **av)
 	params->t_die = ft_atoi(av[2]);
 	params->t_eat = ft_atoi(av[3]);
 	params->t_sleep = ft_atoi(av[4]);
-	params->satiated = 0;
 	params->dead = 0;
+	if (pthread_mutex_init(&params->talking, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(&params->race_d, NULL) != 0)
+	{
+		pthread_mutex_destroy(&params->talking);
+		return (1);
+	}
 	if (params->population <= 0 || params->population > 200 || params->t_die
 		<= 60 || params->t_eat <= 60 || params->t_sleep <= 60)
 		return (1);
@@ -59,16 +65,8 @@ t_params	*init_params(int ac, char **av)
 	params = malloc(sizeof(t_params));
 	if (!params)
 		return (0);
-	if (check_args(ac, av))
-	{
-		if (from_args_to_params(params, ac, av)
-			|| pthread_mutex_init(&params->talking, NULL))
-		{
-			free(params);
-			return (0);
-		}
-	}
-	else
+	if (!check_args(ac, av)
+		|| from_args_to_params(params, ac, av))
 	{
 		free(params);
 		return (0);
@@ -88,14 +86,9 @@ t_philo	*new_philo(t_params *p, int id)
 	new_philo->meals = 0;
 	new_philo->full = 0;
 	new_philo->last_meal = present();
-	if (pthread_mutex_init(&new_philo->fork, NULL))
+	if (init_philo_mutex(&new_philo->fork, &new_philo->eating,
+			&new_philo->race_f))
 	{
-		free(new_philo);
-		return (0);
-	}
-	if (pthread_mutex_init(&new_philo->eating, NULL))
-	{
-		pthread_mutex_destroy(&new_philo->fork);
 		free(new_philo);
 		return (0);
 	}

@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/10/06 17:02:20 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/04 15:29:15 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,100 +18,41 @@ void	philo_is_alone(t_philo *philo)
 	philo_talks(philo, "has taken a fork");
 	ft_usleep(philo->params->t_die);
 	pthread_mutex_unlock(&philo->fork);
-	philo_talks(philo, "is dead");
+	philo_talks(philo, "died");
 }
 
-void	are_philos_alive(t_philo *philo)
+void	*is_philos_alive(void *data)
 {
-	int	i;
-
-	i = 0;
-	while ((i++ < philo->params->population) && !(philo->params->dead))
-	{
-		pthread_mutex_lock(&philo->eating);
-		if (((present() - philo->last_meal) > philo->params->t_die))
-		{
-			philo->params->dead = 1;
-			pthread_mutex_lock(&philo->params->talking);
-			printf("%ld %d %s.\n", (present() - philo->params->start),
-				philo->id, "died");
-			pthread_mutex_unlock(&philo->params->talking);
-		}
-		pthread_mutex_unlock(&philo->eating);
-		philo = philo->next;
-	}
-}
-
-void	*should_philos_run(void *data)
-{
-	t_philo	*philo;
-	int		i;
+	t_philo *philo;
 
 	philo = (t_philo *)data;
-	while (!philo->params->satiated)
+	while (!safe_check(philo->params->race_d, philo->params->dead)
+		&& !safe_check(philo->race_f, philo->full))
 	{
-		i = 0;
-		are_philos_alive(philo);
-		if (philo->params->dead)
-			break ;
-		i = 0;
-		while (philo->params->t_meat >= 0 && i++ < philo->params->population
-			&& philo->full)
-			philo = philo->next;
-		if (i >= philo->params->population)
+		pthread_mutex_lock(&philo->eating);
+		if ((present() - philo->last_meal) > philo->params->t_die)
 		{
-			philo->params->satiated = 1;
-			break ;
+			philo_talks(philo, "died");
+			safe_change(philo->params->race_d, &philo->params->dead, 1);
 		}
+		pthread_mutex_unlock(&philo->eating);
 	}
 	return (NULL);
 }
 
-void	free_init_philos(t_philo *head)
+int		safe_check(pthread_mutex_t check, int value)
 {
-	t_philo	*philo;
-	t_philo	*next_philo;
+	int	i;
 
-	if (head == NULL)
-		return ;
-	philo = head;
-	next_philo = philo->next;
-	while (next_philo != NULL)
-	{
-		pthread_mutex_destroy(&philo->eating);
-		pthread_mutex_destroy(&philo->fork);
-		free(philo);
-		philo = next_philo;
-		next_philo = philo->next;
-	}
-	pthread_mutex_destroy(&philo->eating);
-	pthread_mutex_destroy(&philo->fork);
-	free(philo);
+	pthread_mutex_lock(&check);
+	i = value;
+	pthread_mutex_unlock(&check);
+	return (i);
 }
 
-void	free_philos(t_philo *head)
+void	safe_change(pthread_mutex_t change, int *value, int def)
 {
-	int		i;
-	int		pop;
-	t_philo	*temp;
-	t_philo	*next_temp;
-
-	i = 0;
-	pop = head->params->population;
-	temp = head;
-	while ((pop > 1) && (i++ < pop))
-	{
-		pthread_join(temp->philosopher, NULL);
-		temp = temp->next;
-	}
-	i = 0;
-	temp = head;
-	while (i++ < pop)
-	{
-		next_temp = temp->next;
-		pthread_mutex_destroy(&temp->fork);
-		pthread_mutex_destroy(&temp->eating);
-		free(temp);
-		temp = next_temp;
-	}
+	pthread_mutex_lock(&change);
+	*value = def;
+	pthread_mutex_unlock(&change);
 }

@@ -1,4 +1,4 @@
-SRCS	= main.c init.c utils.c philo_utils.c routine.c
+SRCS	= main.c init.c close.c utils.c philo_utils.c routine.c
 
 OBJS	= $(SRCS:.c=.o)
 
@@ -6,7 +6,9 @@ NAME	= philo
 
 CLANG	= clang
 
-FLAGS	= -Wall -Wextra -Werror
+FLAGS	= -Wall -Wextra -Werror 
+
+#-fsanitize=thread
 
 INCLUDE = -lpthread
 

@@ -6,17 +6,11 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:28:33 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/28 21:26:15 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/03 20:04:29 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	ft_error(char *str)
-{
-	ft_putstr_fd(str, 2);
-	return (1);
-}
 
 int	main(int ac, char **av)
 {
@@ -29,19 +23,16 @@ int	main(int ac, char **av)
 	philo = init_philos(params);
 	if (!philo)
 	{
-		pthread_mutex_destroy(&params->talking);
-		free(params);
+		free_params(params);
 		return (ft_error("Error : Problem occured when starting threads !\n"));
 	}
 	if (!thread(philo))
 	{
 		free_philos(philo);
-		pthread_mutex_destroy(&params->talking);
-		free(params);
+		free_params(params);
 		return (ft_error("Error : Can't initialize thread\n"));
 	}
 	free_philos(philo);
-	pthread_mutex_destroy(&params->talking);
-	free(params);
+	free_params(params);
 	return (0);
 }

@@ -6,21 +6,25 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/01 11:14:45 by tpons             #+#    #+#             */
-/*   Updated: 2021/10/05 14:52:00 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/04 15:57:50 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	philo_talks(t_philo *philo, char *str)
+int	philo_talks(t_philo *philo, char *str)
 {
-	if (!philo->params->dead && !philo->params->satiated)
+	if (!safe_check(philo->params->race_d, philo->params->dead)
+		&& !safe_check(philo->race_f, philo->full))
 	{
 		pthread_mutex_lock(&philo->params->talking);
 		printf("%ld %d %s\n", (present() - philo->params->start),
 			philo->id, str);
 		pthread_mutex_unlock(&philo->params->talking);
 	}
+	else
+		return (1);
+	return (0);
 }
 
 void	philo_eats(t_philo *philo)
@@ -30,70 +34,54 @@ void	philo_eats(t_philo *philo)
 	pthread_mutex_lock(&philo->next->fork);
 	philo_talks(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->eating);
-	philo_talks(philo, "is eating");
 	philo->last_meal = present();
-	if (!philo->params->dead && !philo->params->satiated)
-	{
-		ft_usleep(philo->params->t_eat);
-		philo->meals++;
-		if (philo->params->t_meat >= 0
-			&& (philo->meals >= philo->params->t_meat))
-			philo->full = 1;
-	}
 	pthread_mutex_unlock(&philo->eating);
+	philo_talks(philo, "is eating");
+	ft_usleep(philo->params->t_eat);
+	if (philo->params->t_meat >= 0 && ++philo->meals >= philo->params->t_meat)
+		safe_change(philo->race_f, &philo->full, 1);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->next->fork);
 }
 
-void	philo_routine(t_philo *philo)
+void	*philo_routine(void *data)
 {
-	while (!philo->params->dead && philo->params->satiated != 1)
-	{
-		philo_eats(philo);
-		if (philo->params->dead || philo->params->satiated)
-			break ;
-		philo_talks(philo, "is sleeping");
-		ft_usleep(philo->params->t_sleep);
-		if (philo->params->dead || philo->params->satiated)
-			break ;
-		philo_talks(philo, "is thinking");
-	}
-}
-
-void	*philo_launch(void *data)
-{
-	t_philo	*philo;
+	t_philo *philo;
 
 	philo = (t_philo *)data;
-	if (philo->id % 2 == 0)
-		ft_usleep(philo->params->t_eat / 10);
-	philo_routine(philo);
+	if (!(philo->id % 2))
+		ft_usleep(philo->params->t_eat/10);
+	while (!safe_check(philo->params->race_d, philo->params->dead)
+		&& !safe_check(philo->race_f, philo->full))
+	{
+		philo_eats(philo);
+		if (philo_talks(philo, "is sleeping"))
+			return (NULL);
+		ft_usleep(philo->params->t_sleep);
+		if (philo_talks(philo, "is thinking"))
+			return (NULL);
+	}
 	return (NULL);
 }
 
-int	thread(t_philo *head)
+int	thread(t_philo *philo)
 {
 	int			i;
-	t_philo		*philo;
-	pthread_t	alive_check;
 
 	i = 0;
-	philo = head;
 	philo->params->start = present();
 	if (philo->params->population == 1)
 		philo_is_alone(philo);
 	else
 	{
-		if (pthread_create(&(alive_check), NULL, should_philos_run, philo) != 0)
-			return (0);
 		while (philo && i++ < philo->params->population)
 		{
-			if (pthread_create(&(philo->philosopher), NULL, philo_launch, philo)
-				!= 0)
+			if (pthread_create(&philo->philosopher, NULL, philo_routine, philo) != 0)
+				return (0);
+			if (pthread_create(&philo->alive_check, NULL, is_philos_alive, philo) != 0)
 				return (0);
 			philo = philo->next;
 		}
-		pthread_join(alive_check, NULL);
 	}
 	return (1);
 }

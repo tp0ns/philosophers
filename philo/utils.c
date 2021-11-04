@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 15:56:29 by tpons             #+#    #+#             */
-/*   Updated: 2021/09/28 21:45:57 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/04 15:08:49 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,23 @@ void	ft_usleep(long int time_ms)
 	start = present();
 	while ((present() - start) < time_ms)
 		usleep(1);
+}
+
+int	init_philo_mutex(pthread_mutex_t *a, pthread_mutex_t *b,
+pthread_mutex_t *c)
+{
+	if (pthread_mutex_init(a, NULL) != 0)
+		return (1);
+	if (pthread_mutex_init(b, NULL) != 0)
+	{
+		pthread_mutex_destroy(a);
+		return (1);
+	}
+	if (pthread_mutex_init(c, NULL) != 0)
+	{
+		pthread_mutex_destroy(a);
+		pthread_mutex_destroy(b);
+		return (1);
+	}
+	return (0);
 }
