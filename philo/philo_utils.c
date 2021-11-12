@@ -23,24 +23,35 @@ void	philo_is_alone(t_philo *philo)
 
 void	*is_philos_alive(void *data)
 {
-	t_philo *philo;
+	t_philo	*philo;
+	int		i;
 
 	philo = (t_philo *)data;
-	while (!safe_check(philo->params->race_d, philo->params->dead)
-		&& !safe_check(philo->race_f, philo->full))
+	i = 0;
+	while (!safe_check(philo->params->race_d, philo->params->dead))
 	{
-		pthread_mutex_lock(&philo->eating);
-		if ((present() - philo->last_meal) > philo->params->t_die)
+		if (philo->id == 1)
+			i = 0;
+		if (safe_check(philo->race_f, philo->full))
+			i++;
+		else
 		{
-			philo_talks(philo, "died");
-			safe_change(philo->params->race_d, &philo->params->dead, 1);
+			pthread_mutex_lock(&philo->eating);
+			if ((present() - philo->last_meal) > philo->params->t_die)
+			{
+				philo_talks(philo, "died");
+				safe_change(philo->params->race_d, &philo->params->dead, 1);
+			}
+			pthread_mutex_unlock(&philo->eating);
 		}
-		pthread_mutex_unlock(&philo->eating);
+		if (i >= philo->params->population)
+			break ;
+		philo = philo->next;
 	}
 	return (NULL);
 }
 
-int		safe_check(pthread_mutex_t check, int value)
+int	safe_check(pthread_mutex_t check, int value)
 {
 	int	i;
 

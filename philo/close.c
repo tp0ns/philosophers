@@ -51,7 +51,6 @@ void	free_philos(t_philo *philo)
 	pop = philo->params->population;
 	while ((pop > 1) && (i++ < pop))
 	{
-		pthread_join(philo->alive_check, NULL);
 		pthread_join(philo->philosopher, NULL);
 		philo = philo->next;
 	}

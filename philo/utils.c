@@ -24,6 +24,23 @@ int	ft_atoi(char *str)
 	return (sum);
 }
 
+void	ft_putnbr_fd(int n, int fd)
+{
+	char	c;
+
+	if (n < 10)
+	{
+		c = n + '0';
+		write(fd, &c, 1);
+	}
+	else
+	{
+		ft_putnbr_fd(n / 10, fd);
+		c = (n % 10) + '0';
+		write(fd, &c, 1);
+	}
+}
+
 void	ft_putstr_fd(char *str, int fd)
 {
 	int	i;

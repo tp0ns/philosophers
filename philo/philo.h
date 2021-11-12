@@ -38,6 +38,7 @@ typedef struct s_params
 	long int		t_eat;
 	long int		t_sleep;
 	int				t_meat;
+	pthread_t		alive_check;
 	pthread_mutex_t	talking;
 	pthread_mutex_t	race_d;
 	long int		start;
@@ -61,7 +62,6 @@ typedef struct s_params
 typedef struct s_philo
 {
 	pthread_t		philosopher;
-	pthread_t		alive_check;
 	int				id;
 	t_params		*params;
 	int				meals;
@@ -74,6 +74,7 @@ typedef struct s_philo
 }					t_philo;
 
 int					ft_atoi(char *str);
+void				ft_putnbr_fd(int n, int fd);
 void				ft_putstr_fd(char *str, int fd);
 long int			present(void);
 void				ft_usleep(long int time_ms);
@@ -87,7 +88,7 @@ t_philo				*new_philo(t_params *p, int id);
 t_philo				*init_philos(t_params *p);
 
 int					philo_talks(t_philo *philo, char *str);
-void				philo_eats(t_philo *philo);
+int					philo_eats(t_philo *philo);
 void				*philo_routine(void *philo);
 int					thread(t_philo *philo);
 
