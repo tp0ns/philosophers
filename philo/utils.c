@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 15:56:29 by tpons             #+#    #+#             */
-/*   Updated: 2021/11/04 15:08:49 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/16 12:27:28 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,6 @@ int	ft_atoi(char *str)
 	while (str[++i])
 		sum = (sum * 10) + (str[i] - 48);
 	return (sum);
-}
-
-void	ft_putnbr_fd(int n, int fd)
-{
-	char	c;
-
-	if (n < 10)
-	{
-		c = n + '0';
-		write(fd, &c, 1);
-	}
-	else
-	{
-		ft_putnbr_fd(n / 10, fd);
-		c = (n % 10) + '0';
-		write(fd, &c, 1);
-	}
 }
 
 void	ft_putstr_fd(char *str, int fd)

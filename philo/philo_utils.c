@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 01:04:48 by tpons             #+#    #+#             */
-/*   Updated: 2021/11/04 15:29:15 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/16 12:22:54 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,17 @@ void	philo_is_alone(t_philo *philo)
 	ft_usleep(philo->params->t_die);
 	pthread_mutex_unlock(&philo->fork);
 	philo_talks(philo, "died");
+}
+
+void	check_alive(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->eating);
+	if ((present() - philo->last_meal) > philo->params->t_die)
+	{
+		philo_talks(philo, "died");
+		safe_change(philo->params->race_d, &philo->params->dead, 1);
+	}
+	pthread_mutex_unlock(&philo->eating);
 }
 
 void	*is_philos_alive(void *data)
@@ -35,15 +46,7 @@ void	*is_philos_alive(void *data)
 		if (safe_check(philo->race_f, philo->full))
 			i++;
 		else
-		{
-			pthread_mutex_lock(&philo->eating);
-			if ((present() - philo->last_meal) > philo->params->t_die)
-			{
-				philo_talks(philo, "died");
-				safe_change(philo->params->race_d, &philo->params->dead, 1);
-			}
-			pthread_mutex_unlock(&philo->eating);
-		}
+			check_alive(philo);
 		if (i >= philo->params->population)
 			break ;
 		philo = philo->next;

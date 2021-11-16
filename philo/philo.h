@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/07 13:34:59 by tpons             #+#    #+#             */
-/*   Updated: 2021/11/04 15:07:51 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/16 12:27:59 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@
 ** t_eat : time it takes for a philosopher to eat.
 ** t_sleep : time it takes for a philosopher to sleep.
 ** t_meat : minimum number of time a philosopher must eat.
+** alive_check : unique thread to check potential death of philos.
 ** talking : mutex controlling philos can only talk one at a time.
+** race_d : mutex avoiding data races when checking or modifying "dead".
 ** start : Indicate time of first meal.
 ** dead : Flag up when a philosopher is dead.
 */
@@ -56,6 +58,7 @@ typedef struct s_params
 ** last_meal : Hour of last meal. 
 ** eating : Mutex when philosopher is eating. 
 ** fork : Mutex representing fork. 
+** race_f : mutex avoiding data races when checking or modifying "full".
 ** next : points to the philosopher to his right. 
 */
 
@@ -74,12 +77,13 @@ typedef struct s_philo
 }					t_philo;
 
 int					ft_atoi(char *str);
-void				ft_putnbr_fd(int n, int fd);
 void				ft_putstr_fd(char *str, int fd);
 long int			present(void);
 void				ft_usleep(long int time_ms);
 int					init_philo_mutex(pthread_mutex_t *a, pthread_mutex_t *b,
 						pthread_mutex_t *c);
+
+void				ft_putnbr_fd(int n, int fd);
 
 int					check_args(int ac, char **av);
 int					from_args_to_params(t_params *params, int ac, char **av);
@@ -93,6 +97,7 @@ void				*philo_routine(void *philo);
 int					thread(t_philo *philo);
 
 void				philo_is_alone(t_philo *philo);
+void				check_alive(t_philo *philo);
 void				*is_philos_alive(void *data);
 int					safe_check(pthread_mutex_t mutex, int value);
 void				safe_change(pthread_mutex_t mutex, int *value, int def);

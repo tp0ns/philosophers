@@ -6,7 +6,7 @@
 /*   By: tpons <tpons@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/01 11:14:45 by tpons             #+#    #+#             */
-/*   Updated: 2021/11/04 15:57:50 by tpons            ###   ########.fr       */
+/*   Updated: 2021/11/16 12:13:28 by tpons            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int	philo_talks(t_philo *philo, char *str)
 		write(1, " ", 1);
 		ft_putstr_fd(str, 1);
 		write(1, "\n", 1);
-		// printf("%ld %d %s\n", (present() - philo->params->start),
-		// 	philo->id, str);
 		pthread_mutex_unlock(&philo->params->talking);
 	}
 	else
@@ -42,12 +40,15 @@ int	philo_eats(t_philo *philo)
 	philo->last_meal = present();
 	pthread_mutex_unlock(&philo->eating);
 	philo_talks(philo, "is eating");
-	ft_usleep(philo->params->t_eat);
 	if (philo->params->t_meat >= 0 && ++philo->meals >= philo->params->t_meat)
 	{
 		safe_change(philo->race_f, &philo->full, 1);
+		ft_usleep(philo->params->t_eat);
+		pthread_mutex_unlock(&philo->fork);
+		pthread_mutex_unlock(&philo->next->fork);
 		return (1);
 	}
+	ft_usleep(philo->params->t_eat);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->next->fork);
 	return (0);
